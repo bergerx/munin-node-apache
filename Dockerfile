@@ -16,6 +16,7 @@ RUN sed -ri \
     /bin/echo -e "cidr_allow 192.168.0.0/16\ncidr_allow 172.16.0.0/12\ncidr_allow 10.0.0.0/8" >> /etc/munin/munin-node.conf && \
     install -m 0755 -o munin -g munin -d /var/run/munin
 ENV MUNIN_PORT=4949
+ENV ALLOW=
 
 # apache
 COPY ports.conf /etc/apache2/ports.conf
@@ -25,7 +26,12 @@ ENV MUNIN_APACHE_PORT=80
 # slack
 COPY slack.conf /etc/munin/munin-conf.d/slack.conf
 COPY notify_slack_munin /usr/local/bin/notify_slack_munin
+ENV SLACK_WEBHOOK_URL=
+ENV SLACK_CHANNEL="#munin"
+ENV SLACK_USERNAME="munin"
+ENV SLACK_ICON_EMOJI=":munin:"
 
+# supervisord
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
 
